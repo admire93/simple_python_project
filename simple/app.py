@@ -37,6 +37,8 @@ def login():
 @app.route('/login/', methods=['POST'])
 def do_login():
     name = request.values.get('username')
+    if not name:
+        abort(400)
     user = User.query \
            .filter_by(name=name) \
            .first()
@@ -48,7 +50,7 @@ def do_login():
         except IntegrityError as exc:
             print(exc)
             db.session.rollback()
-            abrot(500)
+            abort(500)
     session['token'] = authorize(user)
     return redirect(url_for('hello'))
 
