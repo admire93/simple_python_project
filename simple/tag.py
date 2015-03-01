@@ -10,4 +10,6 @@ class Tag(db.Model, BaseMixin):
 
     __tablename__ = 'tags'
 
+    __repr_attr__ = 'name',
+
     name = Column(Unicode, nullable=False)

@@ -10,4 +10,6 @@ class User(db.Model, BaseMixin):
 
     __tablename__ = 'users'
 
+    __repr_attr__ = 'name',
+
     name = Column(Unicode, nullable=False)
