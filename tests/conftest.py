@@ -1,11 +1,12 @@
 from pytest import fixture, yield_fixture
 
 from simple.app import app, db
-
+from simple.user import User
 
 @fixture
 def fx_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+    app.config['TESTING'] = True
     return app
 
 
@@ -15,3 +16,12 @@ def fx_session(fx_app):
         db.create_all()
         yield db.session
         db.drop_all()
+
+
+@fixture
+def fx_user(fx_session):
+    name = 'kanghyoj'
+    user = User(name=name)
+    fx_session.add(user)
+    fx_session.commit()
+    return user

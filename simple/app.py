@@ -1,21 +1,28 @@
-from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask import Flask, request, abort, session, url_for, redirect
+from sqlalchemy.exc import IntegrityError
+
+from .util import authorize
+from .db import db
+from .user import User
 
 
 __all__ = 'create_app', 'app', 'db',
 config = {
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:////simple.db'
+    'SECRET_KEY': 'aoidfjweoif',
+    'SQLALCHEMY_DATABASE_URI': 'sqlite:////simple.db',
+    'SERVER_NAME': 'localhost',
 }
 
 
 def create_app():
     app = Flask(__name__)
     app.config.update(config)
+    db.init_app(app)
     return app
 
 
 app = create_app()
-db = SQLAlchemy(app)
+
 
 @app.route('/', methods=['GET'])
 def hello():
@@ -29,7 +36,21 @@ def login():
 
 @app.route('/login/', methods=['POST'])
 def do_login():
-    return ''
+    name = request.values.get('username')
+    user = User.query \
+           .filter_by(name=name) \
+           .first()
+    if not user:
+        user = User(name=name)
+        db.session.add(user)
+        try:
+            db.session.commit()
+        except IntegrityError as exc:
+            print(exc)
+            db.session.rollback()
+            abrot(500)
+    session['token'] = authorize(user)
+    return redirect(url_for('hello'))
 
 
 @app.route('/logout/', methods=['GET'])
