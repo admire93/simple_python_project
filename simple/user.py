@@ -6,8 +6,8 @@ from sqlalchemy.types import Integer, Unicode, DateTime
 from .app import db
 from .mixin import BaseMixin
 
-class Tag(db.Model, BaseMixin):
+class User(db.Model, BaseMixin):
 
-    __tablename__ = 'tags'
+    __tablename__ = 'users'
 
     name = Column(Unicode, nullable=False)
