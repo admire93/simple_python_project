@@ -2,6 +2,7 @@ from pytest import fixture, yield_fixture
 
 from simple.app import app, db
 from simple.user import User
+from simple.util import authorize
 
 @fixture
 def fx_app():
@@ -25,3 +26,8 @@ def fx_user(fx_session):
     fx_session.add(user)
     fx_session.commit()
     return user
+
+
+@fixture
+def fx_token(fx_user):
+    return authorize(fx_user)

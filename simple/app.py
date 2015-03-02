@@ -1,9 +1,10 @@
-from flask import Flask, request, abort, session, url_for, redirect
+from flask import Flask, request, abort, session, url_for, redirect, jsonify
 from sqlalchemy.exc import IntegrityError
 
 from .util import authorize, authorize_require
 from .db import db
 from .user import User
+from .tag import Tag
 
 
 __all__ = 'create_app', 'app', 'db',
@@ -64,13 +65,24 @@ def logout():
 
 
 @app.route('/tags/', methods=['GET'])
+@authorize_require
 def tags():
     return ''
 
 
 @app.route('/tags/', methods=['POST'])
+@authorize_require
 def create_tags():
-    return ''
+    name = request.values.get('name')
+    if name is None:
+        abort(400)
+    tag = Tag(name=name)
+    db.session.add(tag)
+    try:
+        db.session.commit()
+    except IntegrityError as exc:
+        db.session.rollback()
+    return jsonify(data={'tag': {'id': tag.id}}), 201
 
 
 @app.route('/users/<name>/statistics/', methods=['GET'])
