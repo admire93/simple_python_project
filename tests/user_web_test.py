@@ -44,3 +44,31 @@ def test_400_do_login(fx_app, fx_session):
             url_for('do_login'),
             content_type='application/x-www-form-urlencoded')
         assert response.status_code == 400
+
+
+def test_403_logout(fx_app, fx_session, fx_user):
+    with fx_app.test_client() as client:
+        response = client.get(url_for('logout'))
+        assert response.status_code == 403
+
+    with fx_app.test_client() as client:
+        response = client.get(url_for('logout', token='abc'))
+        assert response.status_code == 403
+
+    with fx_app.test_client() as client:
+        response = client.get(url_for('logout'),
+                              headers={'Authorization': 'Token abc'})
+        assert response.status_code == 403
+
+
+def test_web_do_logout(fx_app, fx_session, fx_user):
+    token = authorize(fx_user)
+    with fx_app.test_client() as client:
+        response = client.get(url_for('logout', token=token))
+        assert response.status_code == 302
+
+    with fx_app.test_client() as client:
+        header = {'Authorization': 'Token {}'.format(token.decode('utf-8'))}
+        response = client.get(url_for('logout'),
+                              headers=header)
+        assert response.status_code == 302

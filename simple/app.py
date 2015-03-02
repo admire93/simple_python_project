@@ -1,7 +1,7 @@
 from flask import Flask, request, abort, session, url_for, redirect
 from sqlalchemy.exc import IntegrityError
 
-from .util import authorize
+from .util import authorize, authorize_require
 from .db import db
 from .user import User
 
@@ -56,8 +56,11 @@ def do_login():
 
 
 @app.route('/logout/', methods=['GET'])
+@authorize_require
 def logout():
-    return ''
+    if session.get('token'):
+        session.pop('token')
+    return redirect(url_for('login'))
 
 
 @app.route('/tags/', methods=['GET'])
