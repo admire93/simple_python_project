@@ -2,7 +2,7 @@ from functools import wraps
 from datetime import datetime
 
 from itsdangerous import JSONWebSignatureSerializer, BadSignature
-from flask import current_app, abort, request
+from flask import current_app, abort, request, g
 
 from .user import User
 
@@ -22,6 +22,12 @@ def authorize_require(f):
             abort(403)
         elif not authorize(token):
             abort(403)
+        data = authorize(token)
+        g.current_user = User.query \
+                         .filter_by(name=data['user.name']) \
+                         .first()
+        if not g.current_user:
+            abort(404)
         return f(*args, **kwargs)
     return decorator
 

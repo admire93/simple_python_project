@@ -11,18 +11,12 @@ __all__ = 'create_app', 'app', 'db',
 config = {
     'SECRET_KEY': 'aoidfjweoif',
     'SQLALCHEMY_DATABASE_URI': 'sqlite:////simple.db',
-    'SERVER_NAME': 'localhost',
 }
 
 
-def create_app():
-    app = Flask(__name__)
-    app.config.update(config)
-    db.init_app(app)
-    return app
-
-
-app = create_app()
+app = Flask(__name__)
+app.config.update(config)
+db.init_app(app)
 
 
 @app.route('/', methods=['GET'])

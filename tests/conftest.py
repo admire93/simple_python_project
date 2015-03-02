@@ -8,6 +8,7 @@ from simple.util import authorize
 def fx_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
     app.config['TESTING'] = True
+    app.config['SERVER_NAME'] = 'localhost'
     return app
 
 
