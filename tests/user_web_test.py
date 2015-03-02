@@ -68,7 +68,7 @@ def test_web_do_logout(fx_app, fx_session, fx_user):
         assert response.status_code == 302
 
     with fx_app.test_client() as client:
-        header = {'Authorization': 'Token {}'.format(token.decode('utf-8'))}
+        header = {'Authorization': 'Token {}'.format(token)}
         response = client.get(url_for('logout'),
                               headers=header)
         assert response.status_code == 302

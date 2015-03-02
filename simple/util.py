@@ -30,7 +30,8 @@ def authorize(user):
     s = JSONWebSignatureSerializer(current_app.config.get('SECRET_KEY'))
     if isinstance(user, User):
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
-        return s.dumps({'user.name': user.name, 'login_at': now})
+        payload = {'user.name': user.name, 'login_at': now}
+        return s.dumps(payload).decode('utf-8')
     elif isinstance(user, str):
         try:
             return s.loads(user)
