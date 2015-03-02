@@ -1,7 +1,8 @@
-from flask import Flask, request, abort, session, url_for, redirect, jsonify
+from flask import (Flask, request, abort, session, url_for, redirect, jsonify,
+                   render_template)
 from sqlalchemy.exc import IntegrityError
 
-from .util import authorize, authorize_require
+from .util import authorize, authorize_require, login_need
 from .db import db
 from .user import User
 from .tag import Tag
@@ -10,7 +11,7 @@ from .tag import Tag
 __all__ = 'create_app', 'app', 'db',
 config = {
     'SECRET_KEY': 'aoidfjweoif',
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:////simple.db',
+    'SQLALCHEMY_DATABASE_URI': 'sqlite:///simple.db',
 }
 
 
@@ -20,17 +21,19 @@ db.init_app(app)
 
 
 @app.route('/', methods=['GET'])
+@login_need
 def hello():
     return ''
 
 
 @app.route('/login/', methods=['GET'])
 def login():
-    return ''
+    return render_template('login.html')
 
 
 @app.route('/login/', methods=['POST'])
 def do_login():
+    print(db)
     name = request.values.get('username')
     if not name:
         abort(400)
