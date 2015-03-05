@@ -2,6 +2,8 @@ from flask import (Flask, request, abort, session, url_for, redirect, jsonify,
                    render_template, g)
 from sqlalchemy.exc import IntegrityError
 
+import sqlalchemy.sql.functions as sql_func
+
 from .util import authorize, authorize_require, login_need
 from .db import db
 from .user import User
@@ -92,7 +94,12 @@ def user_statistics(name):
            .first()
     if not user:
         abort(404)
-    tags = Tag.query \
+    tags = db.session.query(
+               Tag.name,
+               sql_func.count(Tag.id).label('count'),
+               sql_func.max(Tag.created_at).label('latest_at')
+           ) \
+           .filter_by(user=user) \
            .group_by(Tag.name) \
            .all()
     return render_template('statistics.html', user=user, tags=tags)
