@@ -2,7 +2,7 @@ from functools import wraps
 from datetime import datetime
 
 from itsdangerous import JSONWebSignatureSerializer, BadSignature
-from flask import current_app, abort, request, g, redirect, url_for
+from flask import current_app, abort, request, g, redirect, url_for, session
 
 from .user import User
 
@@ -34,7 +34,7 @@ def login_need(f):
 
 
 def authorize_request():
-    token = request.values.get('token')
+    token = request.values.get('token') or session.get('token')
     auth_header = request.headers.get('Authorization')
     header_prefix = 'Token '
     if auth_header and auth_header.startswith(header_prefix):

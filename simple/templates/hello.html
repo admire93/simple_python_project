@@ -3,4 +3,22 @@
 
 {% block body %}
   <h1> hello {{ g.current_user.name }}</h1>
+
+  <ul>
+
+    <li>
+      <a href="{{ url_for('.logout') }}">로그아웃</a>
+    </li>
+
+    <li>
+      <a href="{{ url_for('.tags') }}">태그 만들기</a>
+    </li>
+
+    <li>
+      <a href="{{ url_for('.user_statistics', name=g.current_user.name) }}">
+        통계 보기
+      </a>
+    </li>
+  </ul>
+
 {% endblock %}

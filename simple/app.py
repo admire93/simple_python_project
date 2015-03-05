@@ -11,19 +11,23 @@ from .tag import Tag
 __all__ = 'create_app', 'app', 'db',
 config = {
     'SECRET_KEY': 'aoidfjweoif',
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:///simple.db',
+    'SQLALCHEMY_DATABASE_URI': 'sqlite:///../simple.db',
 }
 
 
-app = Flask(__name__)
-app.config.update(config)
-db.init_app(app)
+def create_app():
+    app = Flask(__name__)
+    app.config.update(config)
+    db.init_app(app)
+    return app
+
+app = create_app()
 
 
 @app.route('/', methods=['GET'])
 @login_need
 def hello():
-    return ''
+    return render_template('hello.html')
 
 
 @app.route('/login/', methods=['GET'])
@@ -33,7 +37,6 @@ def login():
 
 @app.route('/login/', methods=['POST'])
 def do_login():
-    print(db)
     name = request.values.get('username')
     if not name:
         abort(400)
