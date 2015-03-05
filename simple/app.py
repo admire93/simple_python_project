@@ -1,5 +1,5 @@
 from flask import (Flask, request, abort, session, url_for, redirect, jsonify,
-                   render_template)
+                   render_template, g)
 from sqlalchemy.exc import IntegrityError
 
 from .util import authorize, authorize_require, login_need
@@ -11,7 +11,7 @@ from .tag import Tag
 __all__ = 'create_app', 'app', 'db',
 config = {
     'SECRET_KEY': 'aoidfjweoif',
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:///../simple.db',
+    'SQLALCHEMY_DATABASE_URI': 'postgresql://hyojun@localhost:5432/simple',
 }
 
 
@@ -76,7 +76,7 @@ def create_tags():
     name = request.values.get('name')
     if name is None:
         abort(400)
-    tag = Tag(name=name)
+    tag = Tag(name=name, user=g.current_user)
     db.session.add(tag)
     try:
         db.session.commit()

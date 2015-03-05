@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 install_requires = [
   'flask == 0.10.1', 'sqlalchemy == 0.9.8', 'Flask-SQLAlchemy == 2.0',
-  'alembic == 0.7.4', 'itsdangerous == 0.24', 'click == 3.3'
+  'alembic == 0.7.4', 'itsdangerous == 0.24', 'click == 3.3', 'psycopg2'
 ]
 
 test_require = [

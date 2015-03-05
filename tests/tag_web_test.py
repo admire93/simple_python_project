@@ -10,7 +10,7 @@ def test_web_denied_create_tag(fx_app):
     assert response.status_code == 403
 
 
-def test_web_create_tag(fx_app, fx_token, fx_session):
+def test_web_create_tag(fx_app, fx_token, fx_session, fx_user):
     tag_name = 'abc'
     def assert_response(response):
         assert response.status_code == 201
@@ -23,6 +23,7 @@ def test_web_create_tag(fx_app, fx_token, fx_session):
         assert tag
         assert tag_name == tag.name
         assert data['data']['tag']['id'] == tag.id
+        assert tag.user.name == fx_user.name
 
     with fx_app.test_client() as client:
         resp = client.post(url_for('create_tags', token=fx_token,
