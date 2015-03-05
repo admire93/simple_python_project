@@ -67,7 +67,7 @@ def logout():
 @app.route('/tags/', methods=['GET'])
 @authorize_require
 def tags():
-    return ''
+    return render_template('tag.html')
 
 
 @app.route('/tags/', methods=['POST'])
@@ -87,4 +87,12 @@ def create_tags():
 
 @app.route('/users/<name>/statistics/', methods=['GET'])
 def user_statistics(name):
-    return ''
+    user = User.query \
+           .filter_by(name=name) \
+           .first()
+    if not user:
+        abort(404)
+    tags = Tag.query \
+           .group_by(Tag.name) \
+           .all()
+    return render_template('statistics.html', user=user, tags=tags)

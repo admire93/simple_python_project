@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+  <h1> {{ user.name }}의 통계 </h1>
+
+  <table border="1">
+    <thead>
+      <th>이름</th>
+      <th>횟수</th>
+      <th>가장 최근 태깅 날짜</th>
+    </thead>
+
+    <tbody>
+
+      {% for tag in tags-%}
+        <tr>
+          <td>{{ tag.name }}</td>
+          <td>{{ tag.name }}</td>
+          <td>{{ tag.name }}</td>
+        </tr>
+      {%- endfor %}
+
+    </tbody>
+
+  </table>
+
+{% endblock %}
